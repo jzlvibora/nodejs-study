@@ -1,5 +1,7 @@
 const bodyParser = require('body-parser');
 const express = require('express');
+const adminRoutes = require('./routes/admin');
+const shopRoutes = require('./routes/shop');
 
 const app = express();
 
@@ -10,20 +12,10 @@ app.use('/', (req, res, next) => {
     next();
 });
 
-app.use('/add-product', (req, res, next) => {
-  console.log('In another middleware!');
-  res.send('<form action="/product" method="POST"><input type="text" name="title"><button>Submit</button></form>');
-});
-
-app.post('/product', (req,res,next) =>{
-  console.log(req.body)
-  res.redirect('/')
-
+app.use(adminRoutes)
+app.use(shopRoutes)
+app.use((req,res,next) => {
+  res.status(404).send('<h1>Page not Found</h1>')
 })
-
-app.use('/', (req, res, next) => {
-  console.log('In another middleware!');
-  res.send('<h1>Hello from Express!</h1>');
-});
 
 app.listen(3000);
